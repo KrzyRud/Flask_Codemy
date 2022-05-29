@@ -12,13 +12,20 @@ from flask_sqlalchemy import SQLAlchemy
 
 from datetime import datetime
 
+import os
+
+# Creating env variable form .env
+from dotenv import load_dotenv
+load_dotenv()
+
 # Create the instances of main extendes
 app = Flask(__name__)
 
 
 # App Config
     # Secret key required by wtf forms
-app.config['SECRET_KEY'] = 'IMO9012305!@#'
+
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
     # Add database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
