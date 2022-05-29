@@ -1,4 +1,9 @@
 {% extends 'base.html' %} 
+
+{% block title %} 
+    - Update User
+{% endblock %}
+
 {% block body %} 
 
 {% for msg in get_flashed_messages() %}
@@ -16,7 +21,7 @@
 <h1>Update Users:</h1>
 <br />
 <div class="shadow p-3 mb-5 bg-body rounded">
-  <form action="{{ url_for('update', id=user_to_update.id)}}" method="POST">
+  <form action="{{ url_for('update', id=user_to_update.id) }}" method="POST">
     {{ form.hidden_tag() }}
     {{ form.name.label(class="form-label") }} 
     {{ form.name(class="form-control", value=user_to_update.name) }} 
@@ -25,10 +30,8 @@
     
     <br />
     {{ form.submit(class="btn btn-secondary") }}
-    <a href="{{ url_for('delete', id=id)}}" class="btn btn-warning"> Delete </a>
+    <a href="{{ url_for('delete', id=id) }}" class="btn btn-danger"> Delete </a>
   </form>
 </div>
-
-
 
 {% endblock %}

@@ -1,5 +1,9 @@
 {% extends 'base.html' %} 
 
+{% block title %} 
+    - Add New User
+{% endblock %}
+
 {% block body %} 
 
 {% for msg in get_flashed_messages() %}
@@ -30,6 +34,8 @@
                 {{ form.hidden_tag() }} 
                 {{ form.name.label(class="form-label") }} {{ form.name(class="form-control") }} 
                 {{ form.email.label(class="form-label") }} {{ form.email(class="form-control") }} 
+                {{ form.password_hash.label(class="form-label") }} {{ form.password_hash(class="form-control") }} 
+                {{ form.psw2.label(class="form-label") }} {{ form.psw2(class="form-control") }} 
                 <br>
                 {{ form.submit(class="btn btn-secondary") }}
             </form>
