@@ -1,9 +1,26 @@
 {% extends 'base.html' %}
 
 {% block title %} 
-    - Home
+    - All Blog Posts
 {% endblock %}
 
 {% block body %}
-<h1>Hello World!!!</h1>
+
+<h2>All Blog Posts...</h2>
+<i>Click on the Open button in order to open it's full page</i>
+<br>
+<hr>
+{% for post in posts %}
+    <div class="shadow-lg p-3 mb-5 bg-body rounded">
+        <u><h4>{{ post.title }}</h4></u>  
+        <br>
+        {{ post.content }}
+        <br>
+        <br>
+        <a href="{{ url_for('post', id=post.id) }}"> 
+            <button type="button" class="btn btn-outline-secondary btn-sm">Open</button> 
+        </a>
+    </div>
+    {% endfor %}
+
 {% endblock %}

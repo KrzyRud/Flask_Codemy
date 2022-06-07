@@ -1,0 +1,24 @@
+{% extends 'base.html' %} 
+
+{% block title %} - {{ post.slug }} {% endblock %} 
+
+{% block body %}
+
+<div class="shadow-lg p-3 mb-5 bg-body rounded">
+  <u><h4>{{ post.title }}</h4></u>
+  <small>
+    Posted on:
+    <h6>{{ post.date_posted }}</h6>
+    By:
+    <h6>{{ post.author }}</h6>
+  </small>
+  <br />
+  {{ post.content }}
+  <br />
+  <br />
+  <a href="{{ url_for('index') }}">
+      <button type="button" class="btn btn-outline-secondary btn-sm"">Back</button>
+  </a>
+</div>
+
+{% endblock %}

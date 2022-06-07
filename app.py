@@ -95,10 +95,21 @@ class PostForm(FlaskForm):
     slug = StringField("Slug", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
-# Main route
+# Main route, showing all the blog's posts
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Grabbing all the posts from the database, orderes by post date
+    posts = Post.query.order_by(Post.date_posted)
+
+    return render_template('index.html', posts=posts)
+
+# A route shownig the individual post page
+@app.route('//<int:id>')
+def post(id):
+
+    post = Post.query.get_or_404(id)
+
+    return render_template('post.html', post=post)
 
 # Added user page
 @app.route('/user', methods=["POST", "GET"])
