@@ -6,12 +6,16 @@ from enum import unique
 from tokenize import Name
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_wtf import FlaskForm
+from sqlalchemy import Integer
+# Imports different components from WTF forms
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, EqualTo, Length
-# importing SQLAlchemy
+from wtforms.widgets import TextArea
+ 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 
 from datetime import datetime
 
@@ -36,13 +40,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Create db Model
+# Create db Model for the users
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(200), nullable = False)
     email = db.Column(db.String(120), nullable = False, unique=True)
     password_hash = db.Column(db.String(125))
     dateAdded = db.Column(db.DateTime, default=datetime.utcnow)
+
+# Create the database MODEL for our Blog Post
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow())
+    slug = db.Column(db.String(255))
 
     # Property checking if password is hashed
     @property
@@ -72,6 +85,14 @@ class UserForm(FlaskForm):
 # Create the form for user.html
 class NameForm(FlaskForm):
     name = StringField("What's Your Name:", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
+# Create the Form for the Post
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    content = StringField("Content", validators=[DataRequired()], widget = TextArea())
+    author = StringField("Author", validators=[DataRequired()])
+    slug = StringField("Slug", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 # Main route
@@ -159,6 +180,40 @@ def delete(id):
         flash('Somthing went really wrong when deleteing, try one more time...')
         our_users = Users.query.order_by(Users.dateAdded)
         return redirect(url_for('add_user'))
+
+# The route showing how to use JSON in our projects
+# Flask will return JSON form standard Python's dictionary
+@app.route('/date')
+def get_current_date():
+    favorite_pizza = {
+        "John":"Peperoni",
+        "Anna":"Vegi"
+    }
+    return favorite_pizza
+    # return {"Date":date.today()}
+
+# Add the Post Page
+@app.route('/add-post', methods=['GET', 'POST'])
+def add_post():
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content = form.content.data, author=form.author.data, slug=form.slug.data )
+        # Clearing the form
+        form.title.data = ''
+        form.content.data = ''
+        form.author.data = ''
+        form.slug.data = ''
+        # Add the post to the database
+        db.session.add(post)
+        db.session.commit()
+
+        # Return the flash message
+        flash("Blog Post has been successfully Added")
+
+    # Redirect to the Add_Post page
+    return render_template("add_post.html", form=form)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
