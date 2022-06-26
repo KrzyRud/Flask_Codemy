@@ -3,6 +3,18 @@
 {% block title %} - {{ post.slug }} {% endblock %} 
 
 {% block body %}
+<!-- FLASH MESSAGES -->
+{% for msg in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{ msg }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %}
 
 <div class="shadow-lg p-3 mb-5 bg-body rounded">
   <u><h4>{{ post.title }}</h4></u>
@@ -11,14 +23,27 @@
     <h6>{{ post.date_posted }}</h6>
     By:
     <h6>{{ post.author }}</h6>
+    Slug:
+    <h6>{{ post.slug }}</h6>
   </small>
   <br />
-  {{ post.content }}
+  Content:
+  <h5>{{ post.content | safe }}</h5> 
   <br />
   <br />
+
   <a href="{{ url_for('index') }}">
       <button type="button" class="btn btn-outline-secondary btn-sm"">Back</button>
   </a>
+
+  <a href="{{ url_for('edit_post', id=post.id) }}"> 
+      <button type="button" class="btn btn-outline-warning btn-sm">Edit Post</button> 
+  </a>
+
+  <a href="{{ url_for('delete_post', id=post.id) }}"> 
+      <button type="button" class="btn btn-outline-danger btn-sm">Delete Post</button> 
+  </a>
+
 </div>
 
 {% endblock %}

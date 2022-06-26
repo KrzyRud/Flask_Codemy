@@ -1,0 +1,44 @@
+{% extends 'base.html' %} 
+
+{% block title %} - {{ post.slug }} {% endblock %} 
+
+{% block body %}
+
+{% if current_user.is_authenticated %}
+  <div class="shadow-lg p-3 mb-5 bg-body rounded">
+    
+    <form method="POST">
+      {{ form.hidden_tag() }} 
+      
+      {{ form.title.label(class="form-label") }} 
+      {{ form.title(class="form-control") }} 
+      
+      {{ form.author.label(class="form-label") }} 
+      {{ form.author(class="form-control") }} 
+
+      {{ form.slug.label(class="form-label") }} 
+      {{ form.slug(class="form-control") }}
+
+      {{ form.content.label(class="form-label") }} 
+      {{ form.content(class="form-control", rows=5) }}
+      <br />
+      {{ form.submit(class="btn btn-secondary") }}
+    </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='content') }}
+  </div>
+  <a href="{{ url_for('index') }}">
+        <button type="button" class="btn btn-outline-secondary btn-sm">Back</button>
+  </a>
+
+{% else %}
+    <h2>For Logged Users Only...</h2>
+    <hr>
+    <p>You need to be logged in in order to edit this post</p>
+    <p>Please loggin or register !</p>
+    <br>
+    <a href="{{ url_for('index') }}">
+        <button type="button" class="btn btn-outline-secondary btn-sm">Back</button>
+    </a>
+{% endif %}
+{% endblock %}

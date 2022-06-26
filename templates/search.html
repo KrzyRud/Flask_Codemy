@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block body %}
+
+<h1>Search result for: "<small><em>{{ searched }}</em></small>"</h1>
+
+{% if posts %}
+    {% for post in posts %}
+  
+        <div class="shadow-lg p-3 mb-5 bg-body rounded">
+            <u><h4>{{ post.title }}</h4></u>  
+             <br>
+            {{ post.content | safe }}
+            <br>
+            <br>
+            <a href="{{ url_for('post', id=post.id) }}"> 
+            <button type="button" class="btn btn-outline-success btn-sm">Open</button> 
+            </a>
+        </div>
+        
+    {% endfor %}
+{% else %}
+    <br>
+    <h4>Sorry!!! There is no post with <strong>{{searched}}</strong></h4>
+{% endif %}
+{% endblock %}

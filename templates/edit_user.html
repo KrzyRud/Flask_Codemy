@@ -1,0 +1,61 @@
+{% extends 'base.html' %} 
+
+{% block title %} 
+    - Update User
+{% endblock %}
+
+{% block body %} 
+
+{% if (id == current_user.id) or (current_user.username == "navii") %}
+  {% if current_user.is_authenticated %}
+
+    {% for msg in get_flashed_messages() %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ msg }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %}
+
+    <h1>Edit Users:</h1>
+    <br />
+    <div class="shadow p-3 mb-5 bg-body rounded">
+      <form action="{{ url_for('edit_user', id=user_to_update.id) }}" method="POST">
+        {{ form.hidden_tag() }}
+
+        {{ form.name.label(class="form-label") }} 
+        {{ form.name(class="form-control", value=user_to_update.name) }} 
+
+        {{ form.username.label(class="form-label") }} 
+        {{ form.username(class="form-control", value=user_to_update.username) }} 
+
+        {{ form.email.label(class="form-label") }} 
+        {{ form.email(class="form-control", value=user_to_update.email) }}
+        
+        <br />
+        {{ form.submit(class="btn btn-secondary") }}
+        <a href="{{ url_for('delete_user', id=id) }}" class="btn btn-danger"> Delete </a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary"> Back </a>
+      </form>
+    </div>
+  {% else %}
+    <h2>For Logged Users Only...</h2>
+      <hr>
+      <p>You need to be logged in in order to edit the user</p>
+      <p>Please loggin or register !</p>
+      <br>
+      <a href="{{ url_for('index') }}">
+          <button type="button" class="btn btn-outline-secondary btn-sm"">Back</button>
+      </a>
+  {% endif %}
+
+{% else %}
+      <h1>Access denied!!!</h1>
+      <p>You are not authorised to edit other users profiles.</p>
+{% endif %}
+
+{% endblock %}

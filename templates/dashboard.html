@@ -1,0 +1,61 @@
+{% extends 'base.html' %} 
+
+{% block title %} 
+    - Dashboard
+{% endblock %}
+
+{% block body %} 
+{% for msg in get_flashed_messages() %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+     {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<h1>User's Dashboard!</h1>
+<!-- BOOTSTRAP ELEMENT CARD -->
+<div class="card">
+  {% if current_user.username == 'navii' %}
+    <h5 class="card-header">Welcome {{ current_user.name }} - You are the Admin !!!</h5>
+  {% else %}
+    <h5 class="card-header">Welcome {{ current_user.name }}</h5>
+  {% endif %}
+  <div class="card-body">
+    <h5 class="card-title">Your details:</h5>
+    <p class="card-text">
+      <div class="container">
+        <div class="row">
+          <div class="col-8">
+            <strong>Username: </strong>{{ current_user.username }}<br>
+            <strong>Email: </strong>{{ current_user.email }}<br>
+            <strong>Member since: </strong>{{ current_user.dateAdded }}<br>
+            </p>
+            <br><br>
+            <a href="{{ url_for('logout')}}" class="btn btn-secondary btm-sm">Logout</a>
+            <a href="{{ url_for('delete_user', id=current_user.id)}}" class="btn btn-danger btm-sm"> Delete My Profile </a>
+            <a href="{{ url_for('edit_user', id=current_user.id)}}" class="btn btn-success btm-sm"> Edit </a>
+          </div>
+          <div class="col-4">
+            <img src="{{ url_for('static', filename='images/default-profile.png') }}" 
+                  alt="Default_user_photo"
+                  width="200"
+                  align="right">      
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% if current_user.username == 'navii' %}
+  <br>
+  <hr>
+  <h2>All users: </h2>
+  <ul>
+    {% for user in all_users %}
+        <li>
+          <p> <strong>ID:</strong>  {{ user.id }} - <strong>Username:</strong> {{ user.username }} - <strong>Name:</strong> {{user.name}} - <strong>Email:</strong> {{ user.email }} - <strong>Since:</strong> {{ user.dateAdded }} - <a href="{{ url_for('edit_user', id=user.id)}}" > <strong>Edit</strong> </a> - <a href="{{ url_for('delete_user', id=user.id)}}" > <strong>Delete</strong> </a></p>
+        </li>
+    {% endfor %} 
+  </ul>
+{% endif %}
+{% endblock %}
